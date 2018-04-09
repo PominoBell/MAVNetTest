@@ -3,3 +3,6 @@
 ################################################################################
 
 *.lock
+/MAVNetTest/.vs/MAVNetTest/v15/Server/sqlite3
+/MAVNetTest/.vs/MAVNetTest/v15
+/MAVNetTest/MAVNetTest/obj/Debug
