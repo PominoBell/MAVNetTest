@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MAVNetTest
+﻿namespace MAVNetTest
 {
     internal class Entity
     {
@@ -16,7 +14,11 @@ namespace MAVNetTest
 
         protected double Range;
 
+        public string IdReader => Id;
+
         public int TypeReader => Type;
+
+        public double RangeSetter { get; set; }
 
         public Entity() { }
 
@@ -35,9 +37,6 @@ namespace MAVNetTest
 
         }
 
-        public void SimStart()
-        {
-            
-        }
+        public virtual void SimStart() { }
     }
 }

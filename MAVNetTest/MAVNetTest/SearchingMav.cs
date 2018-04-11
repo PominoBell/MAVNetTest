@@ -5,7 +5,7 @@ namespace MAVNetTest
 {
     internal class SearchingMav : Entity
     {
-        private List<String> CreateList;
+        private List<String> CreateList = new List<string>();
 
         public int AmountOfCreate => CreateList.Count;
 

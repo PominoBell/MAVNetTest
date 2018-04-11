@@ -8,46 +8,55 @@ namespace MAVNetTest
     {
         /// <summary>
         /// 序列编号
+        /// No. of the message in sequence
         /// </summary>
         private readonly string _sequenceNumber;
 
         /// <summary>
         /// 算法编号
+        /// No. of the algorithmNo
         /// </summary>
         private int _algorithmNo;
 
         /// <summary>
         /// 跳数
+        /// hop
         /// </summary>
         private int _livedTime;
 
         /// <summary>
         /// 创建时间
+        /// Time of Creation
         /// </summary>
         private readonly DateTime _creationTime;
 
         /// <summary>
         /// 到达时间
+        /// Time of Arrival
         /// </summary>
         private DateTime _arrivalTime;
 
         /// <summary>
         /// 消息转发的路径
+        /// The route for message transmission
         /// </summary>
         private string _messageRoute;
 
         /// <summary>
         /// 包中存储的数据
+        /// data in the packet
         /// </summary>
         private byte[] _data;
 
         /// <summary>
         /// 最大跳数
+        /// Time to live
         /// </summary>
         public const int TimeToLive = 20;
 
         /// <summary>
         /// 跳数，用于获取和更改的属性
+        /// The property of _livedTime
         /// </summary>
         public int LivedTime
         {
@@ -57,6 +66,7 @@ namespace MAVNetTest
 
         /// <summary>
         /// 到达时间，用于获取和更改的属性
+        /// The property of _arrivalTime
         /// </summary>
         public DateTime ArrivalTime
         {
@@ -66,6 +76,7 @@ namespace MAVNetTest
 
         /// <summary>
         /// 转发路径，用于获取和更改的属性
+        /// The property of _messageRoute
         /// </summary>
         public string MessageRoute
         {
@@ -75,6 +86,7 @@ namespace MAVNetTest
 
         /// <summary>
         /// 算法序号，用于获取和更改的属性
+        /// The property of _algorithmNo
         /// </summary>
         public int AlgorithmNo
         {
@@ -112,12 +124,13 @@ namespace MAVNetTest
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="id">无人机的序号</param>
-        /// <param name="number">消息序号</param>
-        /// <param name="algorithmNo">算法序号</param>
-        public Packet(string id, int number, int algorithmNo)
+        /// <param name="type">实体的类型</param>
+        /// <param name="id">实体的序号 The ID of MAV</param>
+        /// <param name="number">消息序号 The No. of message in sequence</param>
+        /// <param name="algorithmNo">算法序号 The No. of algorithm</param>
+        public Packet(int type, string id, int number, int algorithmNo)
         {
-            _sequenceNumber = id + number;
+            _sequenceNumber = type + id + number;
             _algorithmNo = algorithmNo;
             _livedTime = 0;
             _creationTime = DateTime.Now;
@@ -128,7 +141,7 @@ namespace MAVNetTest
         /// <summary>
         /// 构造函数
         /// </summary>
-        /// <param name="packetXmlDocument">XML格式文件</param>
+        /// <param name="packetXmlDocument">XML对象   XML Object</param>
         public Packet(XmlDocument packetXmlDocument)
         {
             XmlElement root = packetXmlDocument.DocumentElement;
@@ -173,8 +186,9 @@ namespace MAVNetTest
 
         /// <summary>
         /// 将Packet实例的信息转化为XML格式对象
+        /// Convert the instance of Class Packet to a XML Object
         /// </summary>
-        /// <returns>XmlDocument对象</returns>
+        /// <returns>XmlDocument对象  XmlDocument Object</returns>
         public XmlDocument CreateXmlDocument()
         {
             XmlDocument result = new XmlDocument();
@@ -225,6 +239,7 @@ namespace MAVNetTest
 
         /// <summary>
         /// 用于填充data
+        /// Use for Create data
         /// </summary>
         public void CreateBytes()
         {

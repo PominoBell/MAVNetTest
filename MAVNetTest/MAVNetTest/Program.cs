@@ -5,13 +5,6 @@ namespace MAVNetTest
 {
     class Program
     {
-        enum EntityType
-        {
-            Station = 1,
-            Ferrying,
-            Searching
-        }
-
         static void Main()
         {
             InformationLoader informationLoader = new InformationLoader();
@@ -36,33 +29,35 @@ namespace MAVNetTest
                 Thread.Sleep(1000);
             }
 
+            //计算延迟和显示跳数
             foreach (var entity in entities)
             {
                 var entity1 = (Station) entity;
-                if (entity.TypeReader == (int)EntityType.Station)
+                if (entity.TypeReader == (int)AddressBook.EntityType.Station)
                 {
                     entity1.CalculateDelayAndShowTheHop();
                 }
             }
 
+            //计算抵达的比率
             int sumOfSend = 0;
             int sumOfReceive = 0;
 
             foreach (var entity in entities)
             {
-                if (entity.TypeReader == (int)EntityType.Station)
+                if (entity.TypeReader == (int)AddressBook.EntityType.Station)
                 {
                     Station entity1 = (Station) entity;
                     sumOfReceive = entity1.AmountOfReceive;
                 }
-                else if (entity.TypeReader == (int)EntityType.Ferrying || entity.TypeReader == (int)EntityType.Searching)
+                else if (entity.TypeReader == (int)AddressBook.EntityType.Ferrying || entity.TypeReader == (int)AddressBook.EntityType.Searching)
                 {
                     SearchingMav entity1 = (SearchingMav) entity;
                     sumOfSend += entity1.AmountOfCreate;
                 }
             }
 
-            Console.WriteLine(sumOfReceive / sumOfSend);
+            Console.WriteLine("The Deliver Ratio is {0}", (double)sumOfReceive / sumOfSend);
         }
     }
 }
