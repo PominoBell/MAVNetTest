@@ -1,4 +1,6 @@
-﻿namespace MAVNetTest
+﻿using System;
+
+namespace MAVNetTest
 {
     internal class Entity
     {
@@ -13,6 +15,8 @@
         protected double Altitude;
 
         protected double Range;
+
+        public int TypeReader => Type;
 
         public Entity() { }
 

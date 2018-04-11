@@ -1,7 +1,14 @@
-﻿namespace MAVNetTest
+﻿using System;
+using System.Collections.Generic;
+
+namespace MAVNetTest
 {
     internal class SearchingMav : Entity
     {
+        private List<String> CreateList;
+
+        public int AmountOfCreate => CreateList.Count;
+
         public SearchingMav()
         {
         }

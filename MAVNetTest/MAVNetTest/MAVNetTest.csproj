@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompletedFlags.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="FerryingMav.cs" />
     <Compile Include="InformationLoader.cs" />
