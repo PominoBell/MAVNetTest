@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace MAVNetTest
@@ -8,13 +9,12 @@ namespace MAVNetTest
         static void Main()
         {
             InformationLoader informationLoader = new InformationLoader();
-            Entity[] entities = informationLoader.LoadEntities("123.xml");
+            List<Entity> entities = informationLoader.LoadEntities(@"C:\Users\pomino\Source\Repos\MAVNetTest\MAVNetTest\MAVNetTest\EntityInformation.xml");
 
-            Thread[] threads = new Thread[entities.Length];
-            CompletedFlags.Initialization(entities.Length);
+            Thread[] threads = new Thread[entities.Count];
+            CompletedFlags.Initialization(entities.Count);
 
-
-            for (var i = 0; i < entities.Length; i++)
+            for (var i = 0; i < entities.Count; i++)
             {
                 threads[i] = new Thread(entities[i].SimStart);
             }

@@ -20,6 +20,10 @@ namespace MAVNetTest
         {
         }
 
+        public Station(XmlNode entity) : base(entity)
+        {
+        }
+
         public override void SimStart()
         {
             base.SimStart();

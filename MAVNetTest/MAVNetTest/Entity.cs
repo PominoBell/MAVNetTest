@@ -1,4 +1,6 @@
-﻿namespace MAVNetTest
+﻿using System.Xml;
+
+namespace MAVNetTest
 {
     internal class Entity
     {
@@ -30,6 +32,44 @@
             Latitude = latitude;
             Altitude = altitude;
             Range = range;
+        }
+
+        public Entity(XmlNode entity)
+        {
+            var attribute = entity.FirstChild;
+
+            Id = attribute.InnerText;
+            attribute = attribute.NextSibling;
+
+            if (attribute != null)
+            {
+                Type = int.Parse(attribute.InnerText);
+                attribute = attribute.NextSibling;
+            }
+
+            if (attribute != null)
+            {
+                Longitude = double.Parse(attribute.InnerText);
+                attribute = attribute.NextSibling;
+            }
+
+            if (attribute != null)
+            {
+                Latitude = double.Parse(attribute.InnerText);
+                attribute = attribute.NextSibling;
+            }
+
+            if (attribute != null)
+            {
+                Altitude = double.Parse(attribute.InnerText);
+                attribute = attribute.NextSibling;
+            }
+
+            if (attribute != null)
+            {
+                Range = double.Parse(attribute.InnerText);
+                attribute = attribute.NextSibling;
+            }
         }
 
         public void MapFetch()
