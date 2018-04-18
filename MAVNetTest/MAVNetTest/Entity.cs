@@ -16,11 +16,23 @@ namespace MAVNetTest
 
         protected double Range;
 
+        protected PortableMap Map = new PortableMap();
+
         public string IdReader => Id;
 
         public int TypeReader => Type;
 
-        public double RangeSetter { get; set; }
+        public double RangeSetter
+        {
+            get => Range;
+            set => Range = value;
+        }
+
+        public double LongitudeReader => Longitude;
+
+        public double LatitudeReader => Latitude;
+
+        public double AltitudeReader => Altitude;
 
         public Entity() { }
 
@@ -68,13 +80,7 @@ namespace MAVNetTest
             if (attribute != null)
             {
                 Range = double.Parse(attribute.InnerText);
-                attribute = attribute.NextSibling;
             }
-        }
-
-        public void MapFetch()
-        {
-
         }
 
         public virtual void SimStart() { }

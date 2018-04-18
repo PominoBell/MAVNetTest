@@ -13,6 +13,7 @@ namespace MAVNetTest
 
             Thread[] threads = new Thread[entities.Count];
             CompletedFlags.Initialization(entities.Count);
+            Map.Initialization(entities);
 
             for (var i = 0; i < entities.Count; i++)
             {

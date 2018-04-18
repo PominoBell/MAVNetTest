@@ -9,7 +9,7 @@ namespace MAVNetTest
         /// 定义实体类型的枚举
         /// A Enum defined for the type of entity
         /// </summary>
-        public enum EntityType
+        internal enum EntityType
         {
             Station = 1,
             Ferrying,

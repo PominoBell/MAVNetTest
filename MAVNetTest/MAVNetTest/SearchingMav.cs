@@ -10,6 +10,12 @@ namespace MAVNetTest
 
         protected double Orientation;
 
+        public double SpeedSetter
+        {
+            get => Speed;
+            set => Speed = value;
+        }
+
         private List<String> CreateList = new List<string>();
 
         public int AmountOfCreate => CreateList.Count;

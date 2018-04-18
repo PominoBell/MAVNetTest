@@ -4,8 +4,8 @@
     <station>
       <id>001</id>
       <type>1</type>
-      <longitude>19.2</longitude>
-      <latitude>18.7</latitude>
+      <longitude>19.002</longitude>
+      <latitude>18.007</latitude>
       <altitude>500</altitude>
       <range>400</range>
     </station>
@@ -14,8 +14,8 @@
     <ferryingMav>
       <id>001</id>
       <type>2</type>
-      <longitude>19.4</longitude>
-      <latitude>18.5</latitude>
+      <longitude>19.009</longitude>
+      <latitude>18.009</latitude>
       <altitude>600</altitude>
       <range>400</range>
       <speed>30</speed>
@@ -26,8 +26,8 @@
     <searchingMav>
       <id>001</id>
       <type>3</type>
-      <longitude>19.3</longitude>
-      <latitude>18.6</latitude>
+      <longitude>19.003</longitude>
+      <latitude>18.006</latitude>
       <altitude>600</altitude>
       <range>400</range>
       <speed>0</speed>

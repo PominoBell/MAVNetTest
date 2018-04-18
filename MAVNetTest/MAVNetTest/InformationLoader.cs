@@ -5,6 +5,11 @@ namespace MAVNetTest
 {
     internal class InformationLoader
     {
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="file">文件路径     File Route</param>
+        /// <returns>实体集    Set of entities</returns>
         public List<Entity> LoadEntities(string file)
         {
             List<Entity> entities = new List<Entity>();
