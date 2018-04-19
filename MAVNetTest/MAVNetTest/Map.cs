@@ -21,6 +21,11 @@ namespace MAVNetTest
         public double Altitude;
 
         public double Range;
+
+        public bool IsSame(Node obj)
+        {
+            return Id.Equals(obj.Id) && MavType == obj.MavType;
+        }
     }
 
     /// <summary>
@@ -116,8 +121,8 @@ namespace MAVNetTest
                                     EdgeType = 0,
                                     Node1 = _nodes[i],
                                     Node2 = _nodes[j],
-                                    Weight = 1400 / _nodes[i].Range +
-                                             (distance - _nodes[i].Range) / ferryingMav.SpeedSetter
+                                    Weight = 1400 * 8 / (Math.Pow(10, 6) * (-9.09 * Math.Log(2, _nodes[i].Range) + 72.58))
+                                            + (distance - _nodes[i].Range) / ferryingMav.SpeedSetter
                                 };
 
                                 _edges.Add(tmp);
@@ -130,8 +135,8 @@ namespace MAVNetTest
                                     EdgeType = 0,
                                     Node1 = _nodes[i],
                                     Node2 = _nodes[j],
-                                    Weight = 1400 / _nodes[i].Range +
-                                             (distance - _nodes[i].Range) / ferryingMav.SpeedSetter
+                                    Weight = 1400 * 8 / (Math.Pow(10, 6) * (-9.09 * Math.Log(2, _nodes[i].Range) + 72.58))
+                                            + (distance - _nodes[i].Range) / ferryingMav.SpeedSetter
                                 };
 
                                 _edges.Add(tmp);
