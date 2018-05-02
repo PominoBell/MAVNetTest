@@ -14,6 +14,7 @@ namespace MAVNetTest
             Thread[] threads = new Thread[entities.Count];
             CompletedFlags.Initialization(entities.Count);
             Map.Initialization(entities);
+            AddressBook.Initialization(entities.ToArray());
 
             for (var i = 0; i < entities.Count; i++)
             {
@@ -25,7 +26,7 @@ namespace MAVNetTest
                 thread.Start();
             }
 
-            while (CompletedFlags.IsAllCompleted())
+            while (!CompletedFlags.IsAllCompleted())
             {
                 Thread.Sleep(1000);
             }
@@ -33,9 +34,9 @@ namespace MAVNetTest
             //计算延迟和显示跳数
             foreach (var entity in entities)
             {
-                var entity1 = (Station) entity;
                 if (entity.TypeReader == (int)AddressBook.EntityType.Station)
                 {
+                    var entity1 = (Station)entity;
                     entity1.CalculateDelayAndShowTheHop();
                 }
             }
@@ -54,7 +55,7 @@ namespace MAVNetTest
                 else if (entity.TypeReader == (int)AddressBook.EntityType.Ferrying || entity.TypeReader == (int)AddressBook.EntityType.Searching)
                 {
                     SearchingMav entity1 = (SearchingMav) entity;
-                    sumOfSend += entity1.AmountOfCreate;
+                    sumOfSend += entity1.AmountOfSent;
                 }
             }
 

@@ -95,6 +95,18 @@ namespace MAVNetTest
         }
 
         /// <summary>
+        /// 创建时间，用于获取的属性
+        /// The property of _creationTime
+        /// </summary>
+        public DateTime CreationTime => _creationTime;
+
+        /// <summary>
+        /// 消息序列号，用于获取的属性
+        /// The property of _sequenceNumber
+        /// </summary>
+        public string SequenceNumber => _sequenceNumber;
+
+        /// <summary>
         /// 构造函数
         /// </summary>
         public Packet()
@@ -136,6 +148,7 @@ namespace MAVNetTest
             _creationTime = DateTime.Now;
             _arrivalTime = _creationTime;
             _messageRoute = id;
+            CreateBytes();
         }
 
         /// <summary>
