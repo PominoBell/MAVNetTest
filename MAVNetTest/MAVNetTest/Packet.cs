@@ -81,7 +81,7 @@ namespace MAVNetTest
         public string MessageRoute
         {
             get => _messageRoute;
-            set => _messageRoute += value;
+            set => _messageRoute += ", " + value;
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace MAVNetTest
             _livedTime = 0;
             _creationTime = DateTime.Now;
             _arrivalTime = _creationTime;
-            _messageRoute = id;
+            _messageRoute = type + id;
             CreateBytes();
         }
 

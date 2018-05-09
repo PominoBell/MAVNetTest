@@ -130,9 +130,9 @@ namespace MAVNetTest
         /// 用于开始模拟
         /// Use for starting simulation
         /// </summary>
-        public override void SimStart()
+        public override void SimStart(Object testTime)
         {
-            base.SimStart();
+            base.SimStart(testTime);
             
             IPEndPoint ipe = AddressBook.SearchIpEndPoint(Type, Id);
             UdpClient = new UdpClient(ipe);
@@ -173,6 +173,10 @@ namespace MAVNetTest
                 string resultString = Encoding.ASCII.GetString(resultBytes);
                 XmlDocument packetXmlDocument = new XmlDocument {InnerXml = resultString};
                 Packet messagePacket = new Packet(packetXmlDocument);
+
+                messagePacket.MessageRoute = Type + Id;
+                messagePacket.LivedTime = messagePacket.LivedTime + 1;
+
                 ReceiveQueue.Enqueue(messagePacket);
             }
             catch (Exception)
@@ -186,21 +190,33 @@ namespace MAVNetTest
         }
 
         /// <summary>
+        /// 用于对接收信息时的计时
+        /// Used for timing the receiving time
+        /// </summary>
+        /// <param name="obj"></param>
+        public virtual void LeftTime(object obj)
+        {
+            LeftTimeCount = LeftTimeCount + 1000;
+        }
+
+        /// <summary>
         /// 用于进行消息接收
         /// CallBack Function Used for receiving the message
         /// </summary>
         public virtual void UdpReceiver()
         {
             AutoResetEvent autoResetEvent = new AutoResetEvent(false);
-            var timer = new Timer(SetFlag, Thread.CurrentThread.ManagedThreadId, 60000, 60000);
+            var timer = new Timer(SetFlag, Thread.CurrentThread.ManagedThreadId, TotalTestTime, TotalTestTime);
+            var leftTimer = new Timer(LeftTime, null, 1000, 1000);
 
             while (!AllCompleted())
             {
                 UdpClient.BeginReceive(ReceiveCallBack, autoResetEvent);
-                autoResetEvent.WaitOne(1000);
+                autoResetEvent.WaitOne(TotalTestTime - LeftTimeCount);
             }
 
             Console.WriteLine("Thread UdpReceiver Completed. Entity Type {0}, Entity Id {1}", Type, Id);
+            leftTimer.Dispose();
             timer.Dispose();
         }
 
@@ -221,13 +237,13 @@ namespace MAVNetTest
         public virtual void UdpSender()
         {
             var numberCount = 0;
-            var timer = new Timer(SetFlag, Thread.CurrentThread.ManagedThreadId, 60000, 60000);
+            var timer = new Timer(SetFlag, Thread.CurrentThread.ManagedThreadId, TotalTestTime, TotalTestTime);
             var sendTrigger = false;
 
             while (!AllCompleted())
             {
                 MAVNetTest.Map.FetchMap(Map);
-                Node nextNode = Map.AlgorithmSelect(1, new Node
+                Node source = new Node
                 {
                     MavType = Type,
                     Altitude = Altitude,
@@ -235,7 +251,12 @@ namespace MAVNetTest
                     Latitude = Latitude,
                     Longitude = Longitude,
                     Range = Range
-                });
+                };
+
+                Node nextNode = Map.AlgorithmSelect(1, source);
+
+                if (nextNode.IsSame(source))
+                    continue;
 
                 IPEndPoint ipeTo = AddressBook.SearchIpEndPoint(nextNode.MavType, nextNode.Id);
 
@@ -245,7 +266,10 @@ namespace MAVNetTest
                 {
                     sendTrigger = false;
                     if (CreateQueue.TryDequeue(out var result))
+                    {
+                        SendList.Add(Type + Id + numberCount);
                         message = result.CreateXmlDocument().InnerXml;
+                    }
                     else if (ReceiveQueue.TryDequeue(out result))
                         message = result.CreateXmlDocument().InnerXml;
                 }
@@ -255,7 +279,10 @@ namespace MAVNetTest
                     if (ReceiveQueue.TryDequeue(out var result))
                         message = result.CreateXmlDocument().InnerXml;
                     else if (CreateQueue.TryDequeue(out result))
+                    {
+                        SendList.Add(Type + Id + numberCount);
                         message = result.CreateXmlDocument().InnerXml;
+                    }
                 }
                 
                 byte[] sendBytes = Encoding.ASCII.GetBytes(message);
@@ -264,7 +291,6 @@ namespace MAVNetTest
                 {
                     Thread.Sleep(CalculateTheoryDelay(nextNode));
                     UdpClient.BeginSend(sendBytes, sendBytes.Length, ipeTo, SendCallBack, numberCount);
-                    SendList.Add(Type + Id + numberCount);
                 }
             }
 
@@ -292,7 +318,7 @@ namespace MAVNetTest
             int count = 0;
             int numbercount = 0;
             var autoEvent = new AutoResetEvent(false);
-            var timer = new Timer(SetFlag, Thread.CurrentThread.ManagedThreadId, 60000, 60000);
+            var timer = new Timer(SetFlag, Thread.CurrentThread.ManagedThreadId, TotalTestTime, TotalTestTime);
 
             while (!AllCompleted())
             {

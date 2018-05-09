@@ -14,8 +14,18 @@
     <ferryingMav>
       <id>001</id>
       <type>2</type>
-      <longitude>19.009</longitude>
-      <latitude>18.009</latitude>
+      <longitude>19.006</longitude>
+      <latitude>18.006</latitude>
+      <altitude>600</altitude>
+      <range>400</range>
+      <speed>30</speed>
+      <orientation>45</orientation>
+    </ferryingMav>
+    <ferryingMav>
+      <id>002</id>
+      <type>2</type>
+      <longitude>19.007</longitude>
+      <latitude>18.007</latitude>
       <altitude>600</altitude>
       <range>400</range>
       <speed>30</speed>
@@ -28,6 +38,16 @@
       <type>3</type>
       <longitude>19.003</longitude>
       <latitude>18.006</latitude>
+      <altitude>600</altitude>
+      <range>400</range>
+      <speed>0</speed>
+      <orientation>45</orientation>
+    </searchingMav>
+    <searchingMav>
+      <id>002</id>
+      <type>3</type>
+      <longitude>19.002</longitude>
+      <latitude>18.005</latitude>
       <altitude>600</altitude>
       <range>400</range>
       <speed>0</speed>

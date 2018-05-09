@@ -63,9 +63,9 @@ namespace MAVNetTest
         /// 用于开始模拟
         /// Used for starting simulation
         /// </summary>
-        public override void SimStart()
+        public override void SimStart(object testTime)
         {
-            base.SimStart();
+            base.SimStart(testTime);
 
             IPEndPoint ipe = AddressBook.SearchIpEndPoint(Type, Id);
             UdpClient = new UdpClient(ipe);
@@ -98,6 +98,7 @@ namespace MAVNetTest
                 Packet messagePacket = new Packet(packetXmlDocument);
 
                 messagePacket.ArrivalTime = DateTime.Now;
+                messagePacket.MessageRoute = Type + Id;
                 messagePacket.LivedTime = messagePacket.LivedTime + 1;
 
                 _receiveList.Add(messagePacket);
@@ -113,21 +114,33 @@ namespace MAVNetTest
         }
 
         /// <summary>
+        /// 用于对接收信息时的计时
+        /// Used for timing the receiving time
+        /// </summary>
+        /// <param name="obj"></param>
+        public virtual void LeftTime(Object obj)
+        {
+            LeftTimeCount = LeftTimeCount + 1000;
+        }
+
+        /// <summary>
         /// 用于接收信息
         /// Used for receiving messages
         /// </summary>
         public void UdpReceiver()
         {
             AutoResetEvent autoResetEvent = new AutoResetEvent(false);
-            var timer = new Timer(SetFlag, null, 60000, 60000);
+            var timer = new Timer(SetFlag, null, TotalTestTime, TotalTestTime);
+            var leftTimer = new Timer(LeftTime, null, 1000, 1000);
 
             while (!_completed)
             {
                 UdpClient.BeginReceive(ReceiveCallBack, autoResetEvent);
-                autoResetEvent.WaitOne(1000);
+                autoResetEvent.WaitOne(TotalTestTime - LeftTimeCount);
             }
 
             Console.WriteLine("Thread UdpReceiver Completed. Entity Type {0}, Entity Id {1}", Type, Id);
+            leftTimer.Dispose();
             timer.Dispose();
         }
 
@@ -154,6 +167,7 @@ namespace MAVNetTest
 
                 Console.WriteLine("The message {0}'s delay is {1}, and the hop is {2}", packet.SequenceNumber
                     , delaySecond * 1000 + delayMillisecond, packet.LivedTime);
+                Console.WriteLine(packet.MessageRoute);
             }
         }
     }

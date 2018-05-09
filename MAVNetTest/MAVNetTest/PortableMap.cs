@@ -119,7 +119,7 @@ namespace MAVNetTest
 
             foreach (var edge in _edges)
             {
-                if (source.IsSame(edge.Node1) || source.IsSame(edge.Node2))
+                if ((source.IsSame(edge.Node1) || source.IsSame(edge.Node2)) && edge.EdgeType != 0)
                 {
                     if (source.IsSame(edge.Node1))
                     {
@@ -146,7 +146,7 @@ namespace MAVNetTest
             while (nodes.Count != _nodes.Count)
             {
                 double min = double.MaxValue;
-                int posMin = 0;
+                int posMin = -1;
 
                 for (var i = 0; i < weight.Length; i++)
                 {
@@ -156,6 +156,9 @@ namespace MAVNetTest
                         posMin = i;
                     }
                 }
+
+                if (posMin == -1)
+                    break;
 
                 nodes.Add(_nodes[posMin]);
 
@@ -170,7 +173,7 @@ namespace MAVNetTest
 
                 foreach (var edge in _edges)
                 {
-                    if (_nodes[posMin].IsSame(edge.Node1) || _nodes[posMin].IsSame(edge.Node2))
+                    if ((_nodes[posMin].IsSame(edge.Node1) || _nodes[posMin].IsSame(edge.Node2)) && edge.EdgeType != 0)
                     {
                         if (_nodes[posMin].IsSame(edge.Node1) && !nodes.Contains(edge.Node2))
                         {
@@ -209,6 +212,8 @@ namespace MAVNetTest
 
             //若抵达的该点为基站，则返回下一个点
             //If the end of route is station, return the second node.
+
+            if (route[0].Count == 1) return source;
             foreach (var node in _nodes)
             {
                 if (node.MavType == (int)AddressBook.EntityType.Station)

@@ -54,6 +54,18 @@ namespace MAVNetTest
         protected UdpClient UdpClient;
 
         /// <summary>
+        /// 总测试时间
+        /// The total test time
+        /// </summary>
+        protected int TotalTestTime;
+
+        /// <summary>
+        /// 测试时间
+        /// The test time
+        /// </summary>
+        protected int LeftTimeCount;
+
+        /// <summary>
         /// 实体序列号读取
         /// The reader of Id
         /// </summary>
@@ -158,6 +170,10 @@ namespace MAVNetTest
             }
         }
 
-        public virtual void SimStart() { }
+        public virtual void SimStart(object testTime)
+        {
+            TotalTestTime = (int)testTime;
+            LeftTimeCount = 0;
+        }
     }
 }
