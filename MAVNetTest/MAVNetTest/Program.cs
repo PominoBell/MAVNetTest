@@ -23,7 +23,7 @@ namespace MAVNetTest
 
             foreach (var thread in threads)
             {
-                thread.Start(480000);
+                thread.Start(60000);
             }
 
             while (!CompletedFlags.IsAllCompleted())

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -27,6 +28,12 @@ namespace MAVNetTest
         /// The amount of received messages
         /// </summary>
         public int AmountOfReceive => _receiveList.Count;
+
+        public class CallBackStatus
+        {
+            public AutoResetEvent AutoResetEvent;
+            public ConcurrentQueue<int> MessageDelayThisSecond;
+        }
 
         /// <inheritdoc />
         /// <summary>
@@ -87,7 +94,8 @@ namespace MAVNetTest
         /// <param name="ar"></param>
         public void ReceiveCallBack(IAsyncResult ar)
         {
-            AutoResetEvent autoResetEvent = (AutoResetEvent) ar.AsyncState;
+            ConcurrentQueue<int> messageDelayPerSecond = ((CallBackStatus)ar.AsyncState).MessageDelayThisSecond;
+            AutoResetEvent autoResetEvent = ((CallBackStatus)ar.AsyncState).AutoResetEvent;
             IPEndPoint ipe = UdpClient.Client.LocalEndPoint as IPEndPoint;
 
             try
@@ -100,6 +108,8 @@ namespace MAVNetTest
                 messagePacket.ArrivalTime = DateTime.Now;
                 messagePacket.MessageRoute = Type + Id;
                 messagePacket.LivedTime = messagePacket.LivedTime + 1;
+                messageDelayPerSecond.Enqueue(messagePacket.ArrivalTime.Millisecond - messagePacket.CreationTime.Millisecond
+                    + (messagePacket.ArrivalTime.Second - messagePacket.CreationTime.Second) * 1000);
 
                 _receiveList.Add(messagePacket);
             }
@@ -120,7 +130,19 @@ namespace MAVNetTest
         /// <param name="obj"></param>
         public virtual void LeftTime(Object obj)
         {
+            var temp = (ConcurrentQueue<int>) obj;
+            var count = temp.Count;
+            var averageDelay = 0;
+
+            for (int i = 0; i < count; i++)
+            {
+                if (temp.TryDequeue(out var tmp))
+                    averageDelay = averageDelay + tmp;
+            }
+
             LeftTimeCount = LeftTimeCount + 1000;
+            if (count != 0)
+                Console.WriteLine("The average of delay of second {0} is {1}", LeftTimeCount / 1000, averageDelay / count);
         }
 
         /// <summary>
@@ -129,13 +151,16 @@ namespace MAVNetTest
         /// </summary>
         public void UdpReceiver()
         {
+            ConcurrentQueue<int> messageDelayThisSecond = new ConcurrentQueue<int>();
             AutoResetEvent autoResetEvent = new AutoResetEvent(false);
             var timer = new Timer(SetFlag, null, TotalTestTime, TotalTestTime);
-            var leftTimer = new Timer(LeftTime, null, 1000, 1000);
+            var leftTimer = new Timer(LeftTime, messageDelayThisSecond, 1000, 1000);
+            CallBackStatus callBackStatus = new CallBackStatus{AutoResetEvent = autoResetEvent,
+                                                               MessageDelayThisSecond = messageDelayThisSecond};
 
             while (!_completed)
             {
-                UdpClient.BeginReceive(ReceiveCallBack, autoResetEvent);
+                UdpClient.BeginReceive(ReceiveCallBack, callBackStatus);
                 autoResetEvent.WaitOne(TotalTestTime - LeftTimeCount);
             }
 
